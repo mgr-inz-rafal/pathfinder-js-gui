@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pathfinder Creator for Rust Pathfinder Library by mgr inż. Rafał</title>
+</head>
+<body>
+	<div id="controls" style="width:240px">
+		<div class="slider_width">
+			<span>Width:</span>
+			<input type="range" min="4" max="40" value="10" class="slider" id="map_width">
+			<span id="text_width">10</span>
+		</div>
+		<div class="slider_height">
+			<span>Height:</span>
+			<input type="range" min="4" max="20" value="7" class="slider" id="map_height">
+			<span id="text_height">7</span>
+		</div>
+		<button type="button" id="generate">Generate</button>
+	</div>
+	<br>
+	<div id="map" style="width:320px">
+		<!-- Map will be spawned here -->
+	</div>
+	<div id="editor" style="width:240px;display:none">
+		<br>
+		Please edit your map using controls below and press "Calculate":
+		<br>
+		<img id="brush_selected" src="penalty1_0.png">
+		<br>
+		<br>
+		<!-- Make this generic -->
+		<img id="brush_start_point" src="start_point.png" onclick="select_brush_start_point()">
+		<img id="brush_penalty_0_5" src="penalty0_5.png" onclick="select_brush_penalty0_5()">
+		<img id="brush_penalty_1_0" src="penalty1_0.png" onclick="select_brush_penalty1_0()">
+		<img id="brush_end_point" src="end_point.png" onclick="select_brush_end_point()">
+		<br>
+		<br>
+		<button type="button" id="calculate">Calculate</button>
+	</div>
+	<div id="generated_request">
+	</div>
+	<br><br>
+	<div id="received_response">
+	</div>
+	<br><br>
+	<div id="animation" style="display:none">
+		<button type="button" id="animate">Show on playfield</button>
+	</div>
+    <script>
+		var received_data = '';
+		
+        map_width.oninput = function () {
+            text_width.innerHTML = this.value;
+        }
+        map_height.oninput = function () {
+            text_height.innerHTML = this.value;
+        }
+        calculate.onclick = function () {
+			json_req = "{" +
+			"\"width\":" + text_width.innerHTML + "," +
+			"\"height\":" + text_height.innerHTML + "," +
+			"\"field\":[";
+			for(j = 0; j < text_height.innerHTML; ++j)
+			{
+				for(i = 0; i < text_width.innerHTML; ++i)
+				{
+					id = add_leading_zero(i) + " " + add_leading_zero(j);
+					img = document.getElementById(id);
+					if(img.src.indexOf("start_point.png") != -1)
+					{
+						penalty = "0.0";
+						start_x = i;
+						start_y = j;
+					}
+					else if(img.src.indexOf("end_point.png") != -1)
+					{
+						penalty = "0.0";
+						destination_x = i;
+						destination_y = j;
+					}
+					else
+					{
+						penalty = img.src.substring(img.src.length - 7 , img.src.length - 4);
+						penalty = penalty[0] + "." + penalty[2];
+					}
+					if (penalty == "1.0") {
+						penalty = Number.MAX_VALUE;
+					}
+					json_req += penalty;
+					json_req += ",";
+				}
+			}
+			json_req = json_req.substring(0, json_req.length - 1);
+			json_req += "],";
+			json_req += "\"start\":[" + start_x + "," + start_y + "]," +
+						"\"destination\":[" + destination_x + "," + destination_y + "]";
+			json_req += "}";
+			document.getElementById("generated_request").innerHTML = "<br><b>Generated request:</b><br>" + json_req;
+
+			const url = 'http://localhost:3000';
+			let fetchData = { 
+				method: 'POST', 
+				body: json_req,
+				headers: new Headers()
+			}
+			fetch(url, fetchData)
+				.then(function(response) { return response.text(); })
+			    .then(function(data) {
+					document.getElementById("received_response").innerHTML = "<br><b>Received response:</b><br>" + data;
+					document.getElementById("animation").setAttribute("style", "visibility:block");
+					received_data = data;
+			    });
+		}
+		
+		animate.onclick = function () {
+			var obj = JSON.parse(received_data);
+			for(i = 0; i < obj.steps.length; ++i)
+			{
+				id_to_modify = add_leading_zero(obj.steps[i].x) + " " + add_leading_zero(obj.steps[i].y);
+				document.getElementById(id_to_modify).src = "step.png";
+			}
+		}
+		
+        generate.onclick = function () {
+			document.getElementById("map").innerHTML = "";
+			for(j = 0; j < text_height.innerHTML; ++j)
+			{
+				var div = document.createElement("div");
+				div.setAttribute("style", "width:" + text_width.innerHTML * 32 + "px");
+				document.getElementById("map").appendChild(div);
+				for(i = 0; i < text_width.innerHTML; ++i)
+				{
+					var img = new Image(32, 32);
+					if ((j == 0) || (i == 0) || (j == text_height.innerHTML-1) || (i == text_width.innerHTML-1)) {
+						img.src = "penalty1_0.png";
+					}
+					else if ((j == 1) && (i == 1))
+					{
+						img.src = "start_point.png";
+					}
+					else if ((j == text_height.innerHTML - 2) && (i == text_width.innerHTML - 2))
+					{
+						img.src = "end_point.png";
+					}
+					else
+					{
+						img.src = "penalty0_5.png";
+					}
+					img.onclick = apply_selected_brush
+					img.id = add_leading_zero(i) + " " + add_leading_zero(j);
+					div.appendChild(img);
+				}
+			}
+			document.getElementById("editor").setAttribute("style", "visibility:block");
+		}
+		
+		// num cannot be more that 99
+		function add_leading_zero(num) {
+			if(num < 10) {
+				return "0" + num;
+			}
+			return num;
+		}
+		
+		function select_brush_start_point () {
+			document.getElementById("brush_selected").src = "start_point.png";
+		}
+
+		function select_brush_end_point () {
+			document.getElementById("brush_selected").src = "end_point.png";
+		}
+
+		function select_brush_penalty1_0 () {
+			document.getElementById("brush_selected").src = "penalty1_0.png";
+		}
+
+		function select_brush_penalty0_5 () {
+			document.getElementById("brush_selected").src = "penalty0_5.png";
+		}
+
+		function apply_selected_brush (event) {
+			var source = event.target || event.srcElement;
+			document.getElementById(source.id).src = document.getElementById("brush_selected").src;
+		}
+		
+    </script>
+</body>
+</html>
+
