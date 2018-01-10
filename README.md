@@ -22,6 +22,6 @@ Then you just delegate the job to pathfinder server (localhost:3000 hardcoded, r
 
 ![After calculation](https://github.com/mgr-inz-rafal/pathfinder-js-gui/blob/master/images/step02.png?raw=true)
 
-In the meantime you can observer the console output from Rust pathfinder server while it is crunching data :)
+In the meantime you can observe the console output from Rust pathfinder server while it is crunching data :)
 
 ![Crunching data](https://github.com/mgr-inz-rafal/pathfinder-js-gui/blob/master/images/crunching.png?raw=true)
