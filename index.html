@@ -47,6 +47,8 @@
 	<div id="animation" style="display:none">
 		<button type="button" id="animate">Show on playfield</button>
 	</div>
+	<div id="animation_status" style="display:none">
+	</div>
     <script>
 		var received_data = '';
 		
@@ -109,16 +111,24 @@
 			    .then(function(data) {
 					document.getElementById("received_response").innerHTML = "<br><b>Received response:</b><br>" + data;
 					document.getElementById("animation").setAttribute("style", "visibility:block");
+					document.getElementById("animation_status").setAttribute("style", "visibility:block");
 					received_data = data;
 			    });
 		}
 		
 		animate.onclick = function () {
 			var obj = JSON.parse(received_data);
-			for(i = 0; i < obj.steps.length; ++i)
+			if(obj.status == false)
 			{
-				id_to_modify = add_leading_zero(obj.steps[i].x) + " " + add_leading_zero(obj.steps[i].y);
-				document.getElementById(id_to_modify).src = "step.png";
+				document.getElementById("animation_status").innerHTML = "Cannot find path on this map. Reason: " + obj.comment;
+			}
+			else
+			{
+				for(i = 0; i < obj.path.steps.length; ++i)
+				{
+					id_to_modify = add_leading_zero(obj.path.steps[i].x) + " " + add_leading_zero(obj.path.steps[i].y);
+					document.getElementById(id_to_modify).src = "step.png";
+				}
 			}
 		}
 		
