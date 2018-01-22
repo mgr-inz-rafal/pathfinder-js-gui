@@ -29,14 +29,7 @@
 		<img id="brush_selected" src="penalty1_0.png">
 		<br>
 		<br>
-		<div id="brushes">
-			<!-- Make this generic
-			<img id="brush_start_point" src="start_point.png" onclick="select_brush_start_point()">
-			<img id="brush_penalty_0_5" src="penalty0_5.png" onclick="select_brush_penalty0_5()">
-			<img id="brush_penalty_1_0" src="penalty1_0.png" onclick="select_brush_penalty1_0()">
-			<img id="brush_end_point" src="end_point.png" onclick="select_brush_end_point()">
-			-->
-		</div>
+		<div id="brushes"></div>
 		<br>
 		<br>
 		<button type="button" id="calculate">Calculate</button>
@@ -181,20 +174,21 @@
 			document.getElementById(source.id).src = document.getElementById("brush_selected").src;
 		}
 		
-		var tiles = new Map();
-		tiles.set("penalty0_5.png", {
-			image:"penalty0_5.png",
-			name:"Grass",
-			penalty:0.5
-		});
-		tiles.set("penalty1_0.png", {
-			image:"penalty1_0.png",
-			name:"Wall",
-			penalty:1.0
-		});
-		tiles.forEach(function(value, key) {
+		var tiles = [
+			{
+				image:"penalty0_5.png",
+				name:"Grass",
+				penalty:0.5
+			},
+			{
+				image:"penalty1_0.png",
+				name:"Wall",
+				penalty:1.0
+			}
+		];
+		tiles.forEach(function (value) {
 			var tit = `${value.name} [Penalty: ${value.penalty}]`; // ;-)
-			document.getElementById("brushes").innerHTML += `<img id=${key} src=${key} title='${tit}' onclick="select_brush('${key}')">`;
+			document.getElementById("brushes").innerHTML += `<img id=${value.image} src=${value.image} title='${tit}' onclick="select_brush('${value.image}')">`;
 		});
 		
 		function select_brush(brush_name) {
