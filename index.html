@@ -29,11 +29,14 @@
 		<img id="brush_selected" src="penalty1_0.png">
 		<br>
 		<br>
-		<!-- Make this generic -->
-		<img id="brush_start_point" src="start_point.png" onclick="select_brush_start_point()">
-		<img id="brush_penalty_0_5" src="penalty0_5.png" onclick="select_brush_penalty0_5()">
-		<img id="brush_penalty_1_0" src="penalty1_0.png" onclick="select_brush_penalty1_0()">
-		<img id="brush_end_point" src="end_point.png" onclick="select_brush_end_point()">
+		<div id="brushes">
+			<!-- Make this generic
+			<img id="brush_start_point" src="start_point.png" onclick="select_brush_start_point()">
+			<img id="brush_penalty_0_5" src="penalty0_5.png" onclick="select_brush_penalty0_5()">
+			<img id="brush_penalty_1_0" src="penalty1_0.png" onclick="select_brush_penalty1_0()">
+			<img id="brush_end_point" src="end_point.png" onclick="select_brush_end_point()">
+			-->
+		</div>
 		<br>
 		<br>
 		<button type="button" id="calculate">Calculate</button>
@@ -172,29 +175,33 @@
 			}
 			return num;
 		}
-		
-		function select_brush_start_point () {
-			document.getElementById("brush_selected").src = "start_point.png";
-		}
-
-		function select_brush_end_point () {
-			document.getElementById("brush_selected").src = "end_point.png";
-		}
-
-		function select_brush_penalty1_0 () {
-			document.getElementById("brush_selected").src = "penalty1_0.png";
-		}
-
-		function select_brush_penalty0_5 () {
-			document.getElementById("brush_selected").src = "penalty0_5.png";
-		}
 
 		function apply_selected_brush (event) {
 			var source = event.target || event.srcElement;
 			document.getElementById(source.id).src = document.getElementById("brush_selected").src;
 		}
 		
-    </script>
+		var tiles = new Map();
+		tiles.set("penalty0_5.png", {
+			image:"penalty0_5.png",
+			name:"Grass",
+			penalty:0.5
+		});
+		tiles.set("penalty1_0.png", {
+			image:"penalty1_0.png",
+			name:"Wall",
+			penalty:1.0
+		});
+		tiles.forEach(function(value, key) {
+			var tit = `${value.name} [Penalty: ${value.penalty}]`; // ;-)
+			document.getElementById("brushes").innerHTML += `<img id=${key} src=${key} title='${tit}' onclick="select_brush('${key}')">`;
+		});
+		
+		function select_brush(brush_name) {
+			document.getElementById("brush_selected").src = brush_name;
+		}
+
+		</script>
 </body>
 </html>
 
