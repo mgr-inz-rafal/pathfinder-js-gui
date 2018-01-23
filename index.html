@@ -26,7 +26,7 @@
 		<br>
 		Please edit your map using controls below and press "Calculate":
 		<br>
-		<img id="brush_selected" src="penalty1_0.png">
+		<img id="brush_selected" src="wall.png">
 		<br>
 		<br>
 		<div id="brushes"></div>
@@ -79,8 +79,8 @@
 					}
 					else
 					{
-						penalty = img.src.substring(img.src.length - 7 , img.src.length - 4);
-						penalty = penalty[0] + "." + penalty[2];
+						penalty = img.src.split('\\').pop().split('/').pop();
+						penalty = getTileByImage(penalty).penalty;
 					}
 					if (penalty == "1.0") {
 						penalty = Number.MAX_VALUE;
@@ -139,7 +139,7 @@
 				{
 					var img = new Image(32, 32);
 					if ((j == 0) || (i == 0) || (j == text_height.innerHTML-1) || (i == text_width.innerHTML-1)) {
-						img.src = "penalty1_0.png";
+						img.src = "wall.png";
 					}
 					else if ((j == 1) && (i == 1))
 					{
@@ -151,7 +151,7 @@
 					}
 					else
 					{
-						img.src = "penalty0_5.png";
+						img.src = "grass.png";
 					}
 					img.onclick = apply_selected_brush
 					img.id = add_leading_zero(i) + " " + add_leading_zero(j);
@@ -181,12 +181,27 @@
 				penalty:0.0
 			},
 			{
-				image:"penalty0_5.png",
+				image:"road.png",
+				name:"Road",
+				penalty:0.05
+			},
+			{
+				image:"grass.png",
 				name:"Grass",
+				penalty:0.2
+			},
+			{
+				image:"hill.png",
+				name:"Wall",
+				penalty:0.4
+			},
+			{
+				image:"water.png",
+				name:"Wall",
 				penalty:0.5
 			},
 			{
-				image:"penalty1_0.png",
+				image:"wall.png",
 				name:"Wall",
 				penalty:1.0
 			},
@@ -201,9 +216,20 @@
 			document.getElementById("brushes").innerHTML += `<img id=${value.image} src=${value.image} title='${tit}' onclick="select_brush('${value.image}')">`;
 		});
 		
+		function getTileByImage(name) {
+			for (var i = 0; i < tiles.length; ++i) {
+				if (tiles[i].image == name) {
+					return tiles[i];
+				}
+			}
+		}
+		
 		function select_brush(brush_name) {
 			document.getElementById("brush_selected").src = brush_name;
 		}
+		
+		// TODO:
+		// - title= also for main map, not only brush selector
 
 		</script>
 </body>
