@@ -17,7 +17,7 @@
 			<span id="text_height">7</span>
 		</div>
 		<button type="button" id="generate">Generate...</button>
-		<button type="button" id="save" style="dicsplay:none">!! Save !!</button>
+		<button type="button" id="save" style="display:none">!! Save !!</button>
 		<div id="json_to_save">
 		</div>
 		<div>
@@ -45,7 +45,12 @@
 		<div id="brushes"></div>
 		<br>
 		<br>
+	</div>
+	<div id="editor_buttons" style="width:240px;display:none">
 		<button type="button" id="calculate">Calculate</button>
+		<div id="animation" style="display:none">
+			<button type="button" id="animate">Show on playfield</button>
+		</div>
 	</div>
 	<div id="generated_request">
 	</div>
@@ -53,9 +58,6 @@
 	<div id="received_response">
 	</div>
 	<br><br>
-	<div id="animation" style="display:none">
-		<button type="button" id="animate">Show on playfield</button>
-	</div>
 	<div id="animation_status" style="display:none">
 	</div>
     <script>
@@ -120,6 +122,8 @@
 		}
 		
         calculate.onclick = function () {
+			document.getElementById("editor").style = "width:240px;display:none";
+			
 			json_req = createJsonReq(0);
 			document.getElementById("generated_request").innerHTML = "<br><b>Generated request:</b><br>" + json_req;
 
@@ -201,6 +205,7 @@
 				}
 			}
 			document.getElementById("editor").setAttribute("style", "visibility:block");
+			document.getElementById("editor_buttons").setAttribute("style", "visibility:block");
 			generated = true;
 		}
 		
