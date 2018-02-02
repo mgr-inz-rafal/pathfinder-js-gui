@@ -160,7 +160,7 @@
 			document.getElementById("json_to_save").innerHTML = json_req;
 		}
 		
-        generate.onclick = function () {
+        generate.onclick = function (loaded, use_loaded) {
 			document.getElementById("map").innerHTML = "";
 			for(j = 0; j < text_height.innerHTML; ++j)
 			{
@@ -170,20 +170,26 @@
 				for(i = 0; i < text_width.innerHTML; ++i)
 				{
 					var img = new Image(32, 32);
-					if ((j == 0) || (i == 0) || (j == text_height.innerHTML-1) || (i == text_width.innerHTML-1)) {
-						img.src = "wall.png";
-					}
-					else if ((j == 1) && (i == 1))
-					{
-						img.src = "start_point.png";
-					}
-					else if ((j == text_height.innerHTML - 2) && (i == text_width.innerHTML - 2))
-					{
-						img.src = "end_point.png";
+					if(!use_loaded) {
+						if ((j == 0) || (i == 0) || (j == text_height.innerHTML-1) || (i == text_width.innerHTML-1)) {
+							img.src = "wall.png";
+						}
+						else if ((j == 1) && (i == 1))
+						{
+							img.src = "start_point.png";
+						}
+						else if ((j == text_height.innerHTML - 2) && (i == text_width.innerHTML - 2))
+						{
+							img.src = "end_point.png";
+						}
+						else
+						{
+							img.src = "grass.png";
+						}
 					}
 					else
 					{
-						img.src = "grass.png";
+						img.src = loaded.field[j * text_width.innerHTML + i];
 					}
 					img.onclick = apply_selected_brush
 					img.id = add_leading_zero(i) + " " + add_leading_zero(j);
@@ -262,13 +268,18 @@
 		}
 		
 		var saved_maps = [
-			"{\"width\":10,\"height\":7,\"field\":[wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,start_point.png,grass.png,hill.png,hill.png,hill.png,hill.png,water.png,grass.png,wall.png,wall.png,grass.png,water.png,water.png,hill.png,hill.png,water.png,grass.png,grass.png,wall.png,wall.png,grass.png,water.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,wall.png,wall.png,grass.png,grass.png,grass.png,water.png,grass.png,grass.png,grass.png,grass.png,wall.png,wall.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,end_point.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png],\"start\":[1,1],\"destination\":[8,5]}",
-			"{\"width\":28,\"height\":14,\"field\":[wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,hill.png,hill.png,hill.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,hill.png,grass.png,hill.png,hill.png,wall.png,wall.png,hill.png,hill.png,hill.png,hill.png,hill.png,water.png,grass.png,grass.png,grass.png,water.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,hill.png,hill.png,hill.png,wall.png,wall.png,grass.png,water.png,hill.png,hill.png,water.png,grass.png,water.png,water.png,water.png,water.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,wall.png,wall.png,grass.png,grass.png,water.png,hill.png,grass.png,grass.png,water.png,water.png,water.png,water.png,water.png,road.png,road.png,road.png,road.png,road.png,road.png,road.png,road.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,wall.png,wall.png,road.png,road.png,road.png,road.png,road.png,grass.png,grass.png,grass.png,water.png,water.png,water.png,road.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,road.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,wall.png,wall.png,grass.png,grass.png,grass.png,grass.png,road.png,road.png,road.png,road.png,road.png,road.png,road.png,road.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,road.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,wall.png,wall.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,hill.png,water.png,water.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,road.png,grass.png,water.png,water.png,water.png,grass.png,grass.png,grass.png,wall.png,wall.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,hill.png,hill.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,road.png,water.png,hill.png,hill.png,water.png,water.png,water.png,grass.png,wall.png,wall.png,start_point.png,grass.png,grass.png,hill.png,hill.png,grass.png,hill.png,hill.png,hill.png,hill.png,hill.png,hill.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,road.png,grass.png,water.png,hill.png,hill.png,hill.png,hill.png,grass.png,wall.png,wall.png,hill.png,hill.png,hill.png,hill.png,hill.png,grass.png,grass.png,hill.png,hill.png,hill.png,hill.png,hill.png,grass.png,grass.png,road.png,road.png,road.png,road.png,road.png,grass.png,grass.png,water.png,hill.png,hill.png,end_point.png,grass.png,wall.png,wall.png,hill.png,hill.png,hill.png,hill.png,hill.png,hill.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,road.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,grass.png,grass.png,grass.png,wall.png,wall.png,hill.png,hill.png,hill.png,hill.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,road.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,grass.png,hill.png,hill.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png,wall.png],\"start\":[1,9],\"destination\":[25,10]}"
+			"{\"width\":10,\"height\":7,\"field\":[\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"start_point.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"water.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"water.png\",\"water.png\",\"hill.png\",\"hill.png\",\"water.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"end_point.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\"],\"start\":[1,1],\"destination\":[8,5]}",
+			"{\"width\":28,\"height\":14,\"field\":[\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"wall.png\",\"wall.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"water.png\",\"hill.png\",\"hill.png\",\"water.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"water.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"road.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"water.png\",\"hill.png\",\"hill.png\",\"water.png\",\"water.png\",\"water.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"start_point.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"water.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"road.png\",\"grass.png\",\"grass.png\",\"water.png\",\"hill.png\",\"hill.png\",\"end_point.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"wall.png\",\"wall.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"hill.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"road.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"grass.png\",\"hill.png\",\"hill.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\",\"wall.png\"],\"start\":[1,9],\"destination\":[25,10]}"
 		];
 		
         load.onclick = function () {
 			id = document.getElementById("predefined").value;
-			alert(saved_maps[id]);
+			var loaded = JSON.parse(saved_maps[id]);
+			text_width.innerHTML = loaded.width;
+			map_width.value = loaded.width;
+			text_height.innerHTML = loaded.height;
+			map_height.value = loaded.height;
+			generate.onclick(loaded, 1);
 			
 			// TODO: Display from JSON...
 		}
