@@ -18,7 +18,7 @@ First you need to create a map with your playfield. Grass, mountains, roads, wat
 
 ![Before calculation](https://github.com/mgr-inz-rafal/pathfinder-js-gui/blob/master/images/step01.png?raw=true)
 
-
+<hr/>
 Then you just delegate the job to pathfinder server (localhost:3000 hardcoded, remember to deal with CORS). Purple fields represent the calculated path.
 
 ![After calculation](https://github.com/mgr-inz-rafal/pathfinder-js-gui/blob/master/images/step02.png?raw=true)
