@@ -126,6 +126,7 @@
 			
 			json_req = createJsonReq(0);
 			document.getElementById("generated_request").innerHTML = "<br><b>Generated request:</b><br>" + json_req;
+			document.getElementById("received_response").innerHTML = "<font color=red>Contacting server...</font>";
 
 			const url = 'http://localhost:3000';
 			let fetchData = { 
@@ -133,13 +134,19 @@
 				body: json_req,
 				headers: new Headers()
 			}
+			failed = 0;
 			fetch(url, fetchData)
-				.then(function(response) { return response.text(); })
+				.then(function(response) { return response.text(); }).catch(e => {
+					failed = 1;
+					document.getElementById("received_response").innerHTML = "<font color=red><br><b>Unable to contact pathfinder server at <pre>" + url + "</pre></b><br></font>";
+				})
 			    .then(function(data) {
-					document.getElementById("received_response").innerHTML = "<br><b>Received response:</b><br>" + data;
-					document.getElementById("animation").setAttribute("style", "visibility:block");
-					document.getElementById("animation_status").setAttribute("style", "visibility:block");
-					received_data = data;
+					if(failed == 0) {
+						document.getElementById("received_response").innerHTML = "<br><b>Received response:</b><br>" + data;
+						document.getElementById("animation").setAttribute("style", "visibility:block");
+						document.getElementById("animation_status").setAttribute("style", "visibility:block");
+						received_data = data;
+					}
 			    });
 		}
 		
